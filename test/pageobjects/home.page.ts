@@ -1,5 +1,6 @@
 import { $ } from "@wdio/globals";
 import Page from "./page";
+import { locatorHelper } from "../helpers/locator";
 
 const SCREEN_SELECTOR = {
   title: {
@@ -18,11 +19,13 @@ export default class HomePage extends Page {
 
   constructor() {
     super();
-    this.title = this.generateSelector(
-      SCREEN_SELECTOR.title[this.platform]
+    this.title = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.title[this.platform],
+      "predicate_string"
     );
-    this.checkOutBtn = this.generateSelector(
-      SCREEN_SELECTOR.checkoutBtn[this.platform]
+    this.checkOutBtn = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.checkoutBtn[this.platform],
+      "accessibility_id"
     );
   }
 

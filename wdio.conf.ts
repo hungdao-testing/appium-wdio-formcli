@@ -14,11 +14,11 @@ const IOS_CAP = {
   "wdio:maxInstances": 1,
   "appium:automationName": "XCUITest",
   "appium:deviceName": "iPhone 15 Pro",
-  // "appium:bundleId": "org.reactjs.native.example.todolist",
   "appium:newCommandTimeout": 240,
   "appium:platformVersion": "17.5",
   "appium:noReset": false,
   "appium:app": "./resources/formscli_ios.zip",
+  "appium:maxTypingFrequency": 30 // delay sending key stroke 
 };
 
 export const config: WebdriverIO.Config = {
@@ -44,8 +44,8 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      ...ANDROID_CAP,
-    }
+      ...IOS_CAP,
+    },
   ],
 
   logLevel: "info",
