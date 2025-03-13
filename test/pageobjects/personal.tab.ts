@@ -1,5 +1,6 @@
 import AndroidDatePicker from "../components/AndroidDatePicker.comp";
 import AndroidDropdown from "../components/AndroidDropdown.comp";
+import IOSDatePicker from "../components/IOSDatePicker.comp";
 import IOSDropdown from "../components/IOSDropdown.comp";
 import { elementHelper } from "../helpers/element";
 import { locatorHelper } from "../helpers/locator";
@@ -61,7 +62,7 @@ const SCREEN_SELECTOR = {
   },
   dob: {
     android: 'new UiSelector().resourceId("dateOfBirth-content")',
-    ios: '**/XCUIElementTypeStaticText[`name == "option"`]',
+    ios: 'dateOfBirth-content',
   },
   nextBtn: {
     android: "Next",
@@ -100,6 +101,8 @@ export default class PersonalTab extends CheckoutFlow {
 
   private dob: string;
   private nextBtn: string;
+
+  private DEFAULT_PLACEHOLDER_DOB_IN_IOS = "Please select a date";
 
   constructor() {
     super();
@@ -156,7 +159,7 @@ export default class PersonalTab extends CheckoutFlow {
     );
 
     this.dob = locatorHelper.generateSelector(
-      SCREEN_SELECTOR.dob[this.platform]
+      SCREEN_SELECTOR.dob[this.platform], 'accessibility_id'
     );
     this.nextBtn = locatorHelper.generateSelector(
       SCREEN_SELECTOR.nextBtn[this.platform]
@@ -246,6 +249,14 @@ export default class PersonalTab extends CheckoutFlow {
     await AndroidDatePicker.submitDate();
   }
 
+  private async selectDobInIOS(day: number, month: number, year: number) {
+    await IOSDatePicker.dayPicker(day);
+    await IOSDatePicker.monthPicker(month);
+    await IOSDatePicker.yearPicker(year);
+    await IOSDatePicker.submitDate();
+    await driver.pause(2000)
+  }
+
   private async openDobFieldInIOS() {
     await $(this.dob).click();
   }
@@ -278,12 +289,6 @@ export default class PersonalTab extends CheckoutFlow {
 
   public async getCountry() {
     return this.getContentOfInputField(this.country);
-    // if(this.platform === 'ios'){
-    //   return $(this.country).getAttribute('label')
-    // }
-    // else{
-    //   return $(this.country).getAttribute('text')
-    // }
   }
 
   /**
@@ -297,7 +302,9 @@ export default class PersonalTab extends CheckoutFlow {
       await this.openDobFieldInAndroid();
       await this.selectDobInAndroid(day, month, year);
     } else {
-      await this.openCountryFieldInIOS();
+      await this.openDobFieldInIOS();
+      await this.selectDobInIOS(day, month, year);
+
     }
   }
 
