@@ -40,8 +40,8 @@ export default class IOSDropdown {
       direction,
       scrollableElement: scrollableEl,
       percent: MOBILE_UI_CONSTANTS.ios.SWIPE_PERCENT,
+      duration: 500
     });
-
 
     await $(this.outsideDialog).click();
   }

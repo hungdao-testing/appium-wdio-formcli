@@ -1,6 +1,8 @@
 import { $$, driver, $ } from "@wdio/globals";
 import { locatorHelper } from "../helpers/locator";
 import { dateHelper } from "../helpers/date";
+import { swipeAction } from "../mobileAction/swipe";
+import { MOBILE_UI_CONSTANTS } from "../constants/mobileUI";
 
 export default class IOSDatePicker {
   private static elementTypePicker = locatorHelper.generateSelector(
@@ -23,42 +25,118 @@ export default class IOSDatePicker {
   }
 
   static async monthPicker(month: number) {
-    const monthSelector = await $$(IOSDatePicker.elementTypePicker)[1];
+    const monthSelector = $$(IOSDatePicker.elementTypePicker)[1];
+    const currentMonthValue = await monthSelector.getAttribute("value");
 
-    const expectedMonthInWord = dateHelper.monthInFullWord[month - 1];
-    await monthSelector.setValue(expectedMonthInWord);
+    const direction = swipeAction.setVerticalDirectionBy(
+      dateHelper.monthInFullWord.indexOf(currentMonthValue),
+      month
+    );
+
+    const expectedMonth = locatorHelper.generateSelector(
+      `value == "${dateHelper.monthInFullWord[month - 1]}"`,
+      "predicate_string"
+    );
+
+    // await swipeAction.swipeUntilSeeElement(expectedMonth, {
+    //   scrollableElement: monthSelector,
+    //   direction: direction,
+    //   percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
+    //   duration: 500,
+    // });
+    let isContinueScroll = true;
+    while (isContinueScroll) {
+      if (await $(expectedMonth).isDisplayed()) {
+        isContinueScroll = false;
+        break;
+      }
+      let currentSelectedVal = await monthSelector.getAttribute("value");
+      let percentToScroll =
+        Math.abs(
+          dateHelper.monthInFullWord.indexOf(currentSelectedVal) + 1 - month
+        ) > 3
+          ? { percent: 0.7, duration: 500 }
+          : {
+              percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
+              duration: 500,
+            };
+
+      await driver.swipe({
+        scrollableElement: monthSelector,
+        direction: direction,
+        ...percentToScroll,
+      });
+    }
   }
 
   static async yearPicker(year: number) {
-    const yearSelector = await $$(IOSDatePicker.elementTypePicker)[2];
-    await yearSelector.setValue(year);
+    const yearSelector = $$(IOSDatePicker.elementTypePicker)[2];
+    const currentYearValue = await yearSelector.getAttribute("value");
+    const direction = swipeAction.setVerticalDirectionBy(
+      parseInt(currentYearValue),
+      year
+    );
+
+    const expectedYear = locatorHelper.generateSelector(
+      `value == "${year}"`,
+      "predicate_string"
+    );
+    let isContinueScroll = true;
+    while (isContinueScroll) {
+      if (await $(expectedYear).isDisplayed()) {
+        isContinueScroll = false;
+        break;
+      }
+      let currentSelectedVal = await yearSelector.getAttribute("value");
+      let percentToScroll =
+        Math.abs(parseInt(currentSelectedVal) - year) > 5
+          ? { percent: 0.7, duration: 500 }
+          : {
+              percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
+              duration: 500,
+            };
+
+      await driver.swipe({
+        scrollableElement: yearSelector,
+        direction: direction,
+        ...percentToScroll,
+      });
+    }
   }
 
   static async dayPicker(day: number) {
-    let daySelector = await $$(IOSDatePicker.elementTypePicker)[0];
-    // await daySelector.setValue(day);
-    const currentDay = await $(
-      locatorHelper.generateSelector(
-        '**/XCUIElementTypePickerWheel[`value == "13"`]',
-        "class_chain"
-      )
+    const daySelector = await $$(IOSDatePicker.elementTypePicker)[0];
+    const currentDayValue = await daySelector.getAttribute("value");
+    const direction = swipeAction.setVerticalDirectionBy(
+      parseInt(currentDayValue),
+      day
     );
 
-    const expectedDay = await locatorHelper.generateSelector(
-      `**/XCUIElementTypePickerWheel['value == "${day}"']`,
-      "class_chain"
+    const expectedDay = locatorHelper.generateSelector(
+      `value == "${day}"`,
+      "predicate_string"
     );
+    let isContinueScroll = true;
+    while (isContinueScroll) {
+      if (await $(expectedDay).isDisplayed()) {
+        isContinueScroll = false;
+        break;
+      }
+      let currentSelectedVal = await daySelector.getAttribute("value");
+      let percentToScroll =
+        Math.abs(parseInt(currentSelectedVal) - day) > 7
+          ? { percent: 0.7, duration: 500 }
+          : {
+              percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
+              duration: 500,
+            };
 
-    while(!await $(expectedDay).isDisplayed()){
-        await driver.swipe({
-            scrollableElement: daySelector,
-            direction: 'down',
-            percent: 0.7
-        })
-        daySelector = await $$(IOSDatePicker.elementTypePicker)[0]
+      await driver.swipe({
+        scrollableElement: daySelector,
+        direction: direction,
+        ...percentToScroll,
+      });
     }
-    
-    await $(expectedDay).setValue(day)
   }
 
   static async submitDate() {

@@ -70,14 +70,7 @@ const SCREEN_SELECTOR = {
   },
 };
 
-const IOS_DATE_PICKER_SELECTOR = {
-  headerDate: "id=android:id/date_picker_header_date",
-  headerYear: "id=android:id/date_picker_header_year",
-  yearOption: 'new UiSelector().text("option")',
-  dayOption: 'new UiSelector().text("option")',
-  okButton: "id=android:id/button1",
-  cancelButton: "id=android:id/button2",
-};
+
 
 export default class PersonalTab extends CheckoutFlow {
   private fullName: string;
@@ -254,7 +247,6 @@ export default class PersonalTab extends CheckoutFlow {
     await IOSDatePicker.monthPicker(month);
     await IOSDatePicker.yearPicker(year);
     await IOSDatePicker.submitDate();
-    await driver.pause(2000)
   }
 
   private async openDobFieldInIOS() {

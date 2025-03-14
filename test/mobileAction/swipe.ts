@@ -83,4 +83,5 @@ export const swipeAction = {
   setHorizotalDirectionBy,
   setVerticalDirectionBy,
   swipeVerticallyByCoordUntilSeeElement,
+  swipeUntilCondition
 };
