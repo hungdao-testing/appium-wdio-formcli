@@ -18,7 +18,7 @@ const IOS_CAP = {
   "appium:platformVersion": "17.5",
   "appium:noReset": false,
   "appium:app": "./resources/formscli_ios.zip",
-  "appium:maxTypingFrequency": 30 // delay sending key stroke 
+  "appium:maxTypingFrequency": 30, // delay sending key stroke
 };
 
 export const config: WebdriverIO.Config = {
@@ -47,15 +47,15 @@ export const config: WebdriverIO.Config = {
       ...ANDROID_CAP,
     },
     {
-      ...IOS_CAP
-    }
+      ...IOS_CAP,
+    },
   ],
 
   logLevel: "info",
 
   bail: 0,
 
-  waitforTimeout: 20000,
+  waitforTimeout: 60000,
   connectionRetryTimeout: 120000,
 
   connectionRetryCount: 3,

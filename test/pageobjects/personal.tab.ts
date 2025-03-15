@@ -62,7 +62,7 @@ const SCREEN_SELECTOR = {
   },
   dob: {
     android: 'new UiSelector().resourceId("dateOfBirth-content")',
-    ios: 'dateOfBirth-content',
+    ios: "dateOfBirth-content",
   },
   nextBtn: {
     android: "Next",
@@ -70,7 +70,58 @@ const SCREEN_SELECTOR = {
   },
 };
 
-
+const errorFieldLabels = {
+  android: {
+    fullName: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("fullName-errorMsg")'
+    ),
+    address: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("address-errorMsg")'
+    ),
+    city: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("city-errorMsg")'
+    ),
+    postCode: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("postCode-errorMsg")'
+    ),
+    country: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("country-errorMsg")'
+    ),
+    phoneNumber: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("phoneNumber-errorMsg")'
+    ),
+    dob: locatorHelper.generateSelector(
+      'new UiSelector().resourceId("dateOfBirth-errorMsg")'
+    ),
+  },
+  ios: {
+    fullName: locatorHelper.generateSelector(
+      "fullName-errorMsg",
+      "accessibility_id"
+    ),
+    address: locatorHelper.generateSelector(
+      "address-errorMsg",
+      "accessibility_id"
+    ),
+    city: locatorHelper.generateSelector("city-errorMsg", "accessibility_id"),
+    postCode: locatorHelper.generateSelector(
+      "postCode-errorMsg",
+      "accessibility_id"
+    ),
+    country: locatorHelper.generateSelector(
+      "country-errorMsg",
+      "accessibility_id"
+    ),
+    phoneNumber: locatorHelper.generateSelector(
+      "phoneNumber-errorMsg",
+      "accessibility_id"
+    ),
+    dob: locatorHelper.generateSelector(
+      "dateOfBirth-errorMsg",
+      "accessibility_id"
+    ),
+  },
+};
 
 export default class PersonalTab extends CheckoutFlow {
   private fullName: string;
@@ -152,7 +203,8 @@ export default class PersonalTab extends CheckoutFlow {
     );
 
     this.dob = locatorHelper.generateSelector(
-      SCREEN_SELECTOR.dob[this.platform], 'accessibility_id'
+      SCREEN_SELECTOR.dob[this.platform],
+      "accessibility_id"
     );
     this.nextBtn = locatorHelper.generateSelector(
       SCREEN_SELECTOR.nextBtn[this.platform]
@@ -296,7 +348,6 @@ export default class PersonalTab extends CheckoutFlow {
     } else {
       await this.openDobFieldInIOS();
       await this.selectDobInIOS(day, month, year);
-
     }
   }
 
@@ -306,5 +357,9 @@ export default class PersonalTab extends CheckoutFlow {
 
   public async submit() {
     await $(this.nextBtn).click();
+  }
+
+  public async getErrorMessageOnField(fieldName:  keyof typeof errorFieldLabels['android' | 'ios']){
+    return this.getContentOfInputField(errorFieldLabels[this.platform][fieldName]);
   }
 }
