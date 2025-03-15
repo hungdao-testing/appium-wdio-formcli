@@ -44,8 +44,11 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      ...IOS_CAP,
+      ...ANDROID_CAP,
     },
+    {
+      ...IOS_CAP
+    }
   ],
 
   logLevel: "info",

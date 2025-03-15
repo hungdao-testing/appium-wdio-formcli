@@ -2,7 +2,7 @@ import { expect} from '@wdio/globals'
 import HomePage from '../pageobjects/home.page'
 
 
-describe('My  application', () => {
+describe('Home screen @home-screen @smoke', () => {
     const home = new HomePage();
 
     it('should load home screen', async () => {
