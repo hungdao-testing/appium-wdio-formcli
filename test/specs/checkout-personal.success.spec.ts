@@ -29,9 +29,9 @@ describe("Checkout - Personal info @personal-info", () => {
       code: "AS",
     };
     const dob = {
-      day: 1,
-      month: 12,
-      year: now.getFullYear() - 7,
+      day: now.getDate() + 1 > 28 ? now.getDate() -1 : 28 ,
+      month: now.getMonth() + 2 > 11 ? 11 : now.getMonth() + 2,
+      year: now.getFullYear() - 5,
     };
     expect(await home.isAt()).toBeTruthy();
     await home.openCheckOut();
