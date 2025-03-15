@@ -9,8 +9,8 @@ describe.only("Checkout - Personal info", () => {
 
   it("Input personal info", async () => {
     const countryData = {
-      name: "Algeria",
-      code: "DZ",
+      name: "American Samoa",
+      code: "AS",
     };
     const dob = {
       day: 1,
@@ -33,6 +33,9 @@ describe.only("Checkout - Personal info", () => {
     expect(await personalTab.getCity()).toBe("Saigon");
     expect(await personalTab.getPostCode()).toBe("70001");
     expect(await personalTab.getPhone()).toBe("0792765378");
+    expect([countryData.code, countryData.name]).toContain(
+      await personalTab.getCountry()
+    );
     expect(await personalTab.getDob()).toBe(
       `${dob.day}/${dob.month}/${dob.year}`
     );

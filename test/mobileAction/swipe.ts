@@ -24,9 +24,7 @@ async function swipeVerticallyByCoordUntilSeeElement(
   targetEl: string,
   swipeOpt: SwipeOptions
 ) {
- 
-
-  const {left, top, right, bottom} = await elementHelper.getBoundOfElement(
+  const { left, top, right, bottom } = await elementHelper.getBoundOfElement(
     dropdownElment
   );
 
@@ -55,7 +53,7 @@ async function swipeVerticallyByCoordUntilSeeElement(
     from: from,
     to: to,
     percent: swipeOpt.percent ?? 0.5,
-    duration: 2000,
+    duration: 500,
   });
 }
 
@@ -83,5 +81,5 @@ export const swipeAction = {
   setHorizotalDirectionBy,
   setVerticalDirectionBy,
   swipeVerticallyByCoordUntilSeeElement,
-  swipeUntilCondition
+  swipeUntilCondition,
 };

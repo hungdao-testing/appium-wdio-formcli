@@ -63,6 +63,7 @@ export default class AndroidDatePicker {
     // swipe until see year in modal and click
     await swipeAction.swipeUntilSeeElement(selectYearSelector, {
       direction: direction!,
+      duration: 500
     });
 
     await $(selectYearSelector).click();

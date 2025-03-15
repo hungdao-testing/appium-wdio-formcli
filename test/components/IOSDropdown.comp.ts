@@ -1,8 +1,32 @@
 import { locatorHelper } from "../helpers/locator";
-import { $ } from "@wdio/globals";
+import { $, driver } from "@wdio/globals";
 import { swipeAction } from "../mobileAction/swipe";
 import { MOBILE_UI_CONSTANTS } from "../constants/mobileUI";
 
+async function comparingValueToScroll(
+  pickerElement: ChainablePromiseElement,
+  expectedElement: {
+    locator: string;
+  },
+  direction: "up" | "down",
+  cb: () => Promise<{ percent: number; duration: number }>
+) {
+  let isContinueScroll = true;
+  while (isContinueScroll) {
+    if (await $(expectedElement.locator).isDisplayed()) {
+      await $(expectedElement.locator).click();
+      break;
+    }
+
+    let percentToScroll = await cb();
+
+    await driver.swipe({
+      scrollableElement: pickerElement,
+      direction: direction,
+      ...percentToScroll,
+    });
+  }
+}
 export default class IOSDropdown {
   private static option = locatorHelper.generateSelector(
     'value == "option"',
@@ -26,22 +50,48 @@ export default class IOSDropdown {
   static async scrollToSelect(fromText: string, targetText: string) {
     type directionT = "down" | "up";
 
-    const charCodeOfFromText = fromText.charCodeAt(0);
-    const charCodeOfTargetText = targetText.charCodeAt(0);
-    let direction = swipeAction.setVerticalDirectionBy(
-      charCodeOfFromText,
-      charCodeOfTargetText
-    ) as directionT;
+    let direction: directionT;
+    const sortedArr = [fromText, targetText].sort();
+    if (sortedArr[0] === fromText) {
+      direction = "up";
+    } else {
+      direction = "down";
+    }
 
     let expectedToSeeElement = IOSDropdown.option.replace("option", targetText);
-
     const scrollableEl = $(IOSDropdown.dialog);
-    await swipeAction.swipeUntilCondition($(expectedToSeeElement).isDisplayed, {
-      direction,
-      scrollableElement: scrollableEl,
-      percent: MOBILE_UI_CONSTANTS.ios.SWIPE_PERCENT,
-      duration: 500
-    });
+
+    const percentToScroll = async () => {
+      let currentSelectedVal = await $(
+        locatorHelper.generateSelector(
+          "XCUIElementTypePickerWheel",
+          "class_name"
+        )
+      ).getAttribute("value");
+      let totalCharCodeOfCurrentSelectedVal = Array.from(
+        currentSelectedVal.slice(0, 3)
+      ).reduce((prev, curr) => prev + curr.charCodeAt(0), 0);
+      let totalCharCodeOfTargetText = Array.from(targetText.slice(0, 3)).reduce(
+        (prev, curr) => prev + curr.charCodeAt(0),
+        0
+      );
+      let percentToScroll =
+        Math.abs(
+          totalCharCodeOfCurrentSelectedVal - totalCharCodeOfTargetText
+        ) >= 4
+          ? { percent: 0.7, duration: 500 }
+          : {
+              percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
+              duration: 1000,
+            };
+      return percentToScroll;
+    };
+    await comparingValueToScroll(
+      scrollableEl,
+      { locator: expectedToSeeElement },
+      direction!,
+      percentToScroll
+    );
 
     await $(this.outsideDialog).click();
   }

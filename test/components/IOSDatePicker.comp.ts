@@ -4,6 +4,30 @@ import { dateHelper } from "../helpers/date";
 import { swipeAction } from "../mobileAction/swipe";
 import { MOBILE_UI_CONSTANTS } from "../constants/mobileUI";
 
+async function comparingValueToScroll(
+  pickerElement: ChainablePromiseElement,
+  expectedElement: {
+    locator: string;
+  },
+  direction: "up" | "down",
+  cb: () => Promise<{ percent: number; duration: number }>
+) {
+  let isContinueScroll = true;
+  while (isContinueScroll) {
+    if (await $(expectedElement.locator).isDisplayed()) {
+      await $(expectedElement.locator).click();
+      break;
+    }
+
+    let percentToScroll = await cb();
+
+    await driver.swipe({
+      scrollableElement: pickerElement,
+      direction: direction,
+      ...percentToScroll,
+    });
+  }
+}
 export default class IOSDatePicker {
   private static elementTypePicker = locatorHelper.generateSelector(
     "**/XCUIElementTypePickerWheel",
@@ -38,18 +62,7 @@ export default class IOSDatePicker {
       "predicate_string"
     );
 
-    // await swipeAction.swipeUntilSeeElement(expectedMonth, {
-    //   scrollableElement: monthSelector,
-    //   direction: direction,
-    //   percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
-    //   duration: 500,
-    // });
-    let isContinueScroll = true;
-    while (isContinueScroll) {
-      if (await $(expectedMonth).isDisplayed()) {
-        isContinueScroll = false;
-        break;
-      }
+    const percentToScroll = async () => {
       let currentSelectedVal = await monthSelector.getAttribute("value");
       let percentToScroll =
         Math.abs(
@@ -60,13 +73,14 @@ export default class IOSDatePicker {
               percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
               duration: 500,
             };
-
-      await driver.swipe({
-        scrollableElement: monthSelector,
-        direction: direction,
-        ...percentToScroll,
-      });
-    }
+      return percentToScroll;
+    };
+    await comparingValueToScroll(
+      monthSelector,
+      { locator: expectedMonth },
+      direction!,
+      percentToScroll
+    );
   }
 
   static async yearPicker(year: number) {
@@ -81,12 +95,7 @@ export default class IOSDatePicker {
       `value == "${year}"`,
       "predicate_string"
     );
-    let isContinueScroll = true;
-    while (isContinueScroll) {
-      if (await $(expectedYear).isDisplayed()) {
-        isContinueScroll = false;
-        break;
-      }
+    const percentToScroll = async () => {
       let currentSelectedVal = await yearSelector.getAttribute("value");
       let percentToScroll =
         Math.abs(parseInt(currentSelectedVal) - year) > 5
@@ -95,13 +104,14 @@ export default class IOSDatePicker {
               percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
               duration: 500,
             };
-
-      await driver.swipe({
-        scrollableElement: yearSelector,
-        direction: direction,
-        ...percentToScroll,
-      });
-    }
+      return percentToScroll;
+    };
+    await comparingValueToScroll(
+      yearSelector,
+      { locator: expectedYear },
+      direction!,
+      percentToScroll
+    );
   }
 
   static async dayPicker(day: number) {
@@ -116,12 +126,8 @@ export default class IOSDatePicker {
       `value == "${day}"`,
       "predicate_string"
     );
-    let isContinueScroll = true;
-    while (isContinueScroll) {
-      if (await $(expectedDay).isDisplayed()) {
-        isContinueScroll = false;
-        break;
-      }
+
+    const percentToScroll = async () => {
       let currentSelectedVal = await daySelector.getAttribute("value");
       let percentToScroll =
         Math.abs(parseInt(currentSelectedVal) - day) > 7
@@ -130,13 +136,14 @@ export default class IOSDatePicker {
               percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,
               duration: 500,
             };
-
-      await driver.swipe({
-        scrollableElement: daySelector,
-        direction: direction,
-        ...percentToScroll,
-      });
-    }
+      return percentToScroll;
+    };
+    await comparingValueToScroll(
+      daySelector,
+      { locator: expectedDay },
+      direction!,
+      percentToScroll
+    );
   }
 
   static async submitDate() {

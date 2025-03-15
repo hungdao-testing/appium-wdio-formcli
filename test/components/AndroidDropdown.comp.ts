@@ -49,6 +49,7 @@ export default class AndroidDropdown {
       {
         direction,
         percent: MOBILE_UI_CONSTANTS.android.SWIPE_PERCENT,
+        duration: 500
       }
     );
     await $(expectedToSeeElement).click();
