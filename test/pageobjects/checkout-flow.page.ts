@@ -1,17 +1,18 @@
+import { locatorHelper } from "../helpers/locator";
 import Page from "./page";
 
 const SCREEN_SELECTOR = {
   personalTitle: {
     android: 'new UiSelector().text("Personal")',
-    ios: "",
+    ios: '**/XCUIElementTypeOther[`name == "step-0-testId"`][1]',
   },
   paymentTitle: {
     android: 'new UiSelector().text("Payment")',
-    ios: "",
+    ios: '**/XCUIElementTypeOther[`name == "step-0-testId"`][2]',
   },
   summaryTitle: {
     android: 'new UiSelector().text("Comfirmation")',
-    ios: "",
+    ios: '**/XCUIElementTypeOther[`name == "step-0-testId"`][3]',
   },
 };
 export default abstract class CheckoutFlow extends Page {
@@ -21,14 +22,17 @@ export default abstract class CheckoutFlow extends Page {
 
   constructor() {
     super();
-    this.personalTitle = this.generateSelector(
-      SCREEN_SELECTOR.personalTitle[this.platform]
+    this.personalTitle = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.personalTitle[this.platform],
+      "predicate_string"
     );
-    this.paymentTitle = this.generateSelector(
-      SCREEN_SELECTOR.paymentTitle[this.platform]
+    this.paymentTitle = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.paymentTitle[this.platform],
+      "predicate_string"
     );
-    this.summaryTitle = this.generateSelector(
-      SCREEN_SELECTOR.summaryTitle[this.platform]
+    this.summaryTitle = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.summaryTitle[this.platform],
+      "predicate_string"
     );
   }
 

@@ -1,6 +1,7 @@
 import { locatorHelper } from "../helpers/locator";
 import { $$, $, driver } from "@wdio/globals";
 import { swipeAction } from "../mobileAction/swipe";
+import { MOBILE_UI_CONSTANTS } from "../constants/mobileUI";
 
 export default class AndroidDropdown {
   private static dropdownDialog = locatorHelper.generateSelector(
@@ -15,16 +16,16 @@ export default class AndroidDropdown {
   );
 
   /**
-   * @description 
-   * 
+   * @description
+   *
    * Scroll dropdown (up|down) from visible `fromText` to the expected one `targetText`
-   * 
+   *
    * First: need to set direction of scrolling `up or down` by comparing charCode
-   * 
+   *
    * Second: need to grab bouding rect of the dropdown dialog to set the scrolling points (x, y)
    *
-   * @param fromText 
-   * @param targetText 
+   * @param fromText
+   * @param targetText
    */
   static async scrollToSelect(fromText: string, targetText: string) {
     type directionT = "down" | "up";
@@ -47,6 +48,8 @@ export default class AndroidDropdown {
 
       {
         direction,
+        percent: MOBILE_UI_CONSTANTS.android.SWIPE_PERCENT,
+        duration: 500
       }
     );
     await $(expectedToSeeElement).click();

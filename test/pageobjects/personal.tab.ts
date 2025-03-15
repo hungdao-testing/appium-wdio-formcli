@@ -1,48 +1,52 @@
 import AndroidDatePicker from "../components/AndroidDatePicker.comp";
 import AndroidDropdown from "../components/AndroidDropdown.comp";
+import IOSDatePicker from "../components/IOSDatePicker.comp";
+import IOSDropdown from "../components/IOSDropdown.comp";
+import { elementHelper } from "../helpers/element";
+import { locatorHelper } from "../helpers/locator";
 import CheckoutFlow from "./checkout-flow.page";
 import { $, driver } from "@wdio/globals";
 
 const SCREEN_SELECTOR = {
   fullName: {
     android: 'new UiSelector().resourceId("fullName-content")',
-    ios: "",
+    ios: "fullName-content",
   },
   fullNameLabel: {
     android: 'new UiSelector().text("Full Name")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "Full Name"`][2]',
   },
   address: {
     android: 'new UiSelector().resourceId("address-content")',
-    ios: "",
+    ios: "address-content",
   },
   addressLabel: {
     android: 'new UiSelector().text("Address")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "Address"`][2]',
   },
   city: {
     android: 'new UiSelector().resourceId("city-content")',
-    ios: "",
+    ios: "city-content",
   },
   cityLabel: {
     android: 'new UiSelector().text("City")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "City"`][2]',
   },
   postCode: {
     android: 'new UiSelector().resourceId("postCode-content")',
-    ios: "",
+    ios: "postCode-content",
   },
   postCodeLabel: {
     android: 'new UiSelector().text("Post code")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "Post code"`][2]',
   },
   country: {
     android: 'new UiSelector().resourceId("text_input")',
-    ios: "",
+    ios: "ios_touchable_wrapper",
   },
   countryLabel: {
     android: 'new UiSelector().text("Country")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "Country"`][2]',
   },
   countryOptionLabel: {
     android: 'new UiSelector().text("option")',
@@ -50,30 +54,23 @@ const SCREEN_SELECTOR = {
   },
   phone: {
     android: 'new UiSelector().resourceId("phoneNumber-content")',
-    ios: "",
+    ios: "phoneNumber-content",
   },
   phoneLabel: {
     android: 'new UiSelector().text("Telephone")',
-    ios: "",
+    ios: '**/XCUIElementTypeStaticText[`name == "Telephone"`][2]',
   },
   dob: {
     android: 'new UiSelector().resourceId("dateOfBirth-content")',
-    ios: "",
+    ios: 'dateOfBirth-content',
   },
   nextBtn: {
     android: "Next",
-    ios: "",
+    ios: "Next-button",
   },
 };
 
-const IOS_DATE_PICKER_SELECTOR = {
-  headerDate: "id=android:id/date_picker_header_date",
-  headerYear: "id=android:id/date_picker_header_year",
-  yearOption: 'new UiSelector().text("option")',
-  dayOption: 'new UiSelector().text("option")',
-  okButton: "id=android:id/button1",
-  cancelButton: "id=android:id/button2",
-};
+
 
 export default class PersonalTab extends CheckoutFlow {
   private fullName: string;
@@ -98,52 +95,66 @@ export default class PersonalTab extends CheckoutFlow {
   private dob: string;
   private nextBtn: string;
 
+  private DEFAULT_PLACEHOLDER_DOB_IN_IOS = "Please select a date";
+
   constructor() {
     super();
-    this.fullName = this.generateSelector(
+    this.fullName = locatorHelper.generateSelector(
       SCREEN_SELECTOR.fullName[this.platform]
     );
 
-    this.fullNameLabel = this.generateSelector(
-      SCREEN_SELECTOR.fullNameLabel[this.platform]
+    this.fullNameLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.fullNameLabel[this.platform],
+      "class_chain"
     );
 
-    this.address = this.generateSelector(
+    this.address = locatorHelper.generateSelector(
       SCREEN_SELECTOR.address[this.platform]
     );
-    this.addressLabel = this.generateSelector(
-      SCREEN_SELECTOR.addressLabel[this.platform]
+    this.addressLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.addressLabel[this.platform],
+      "class_chain"
     );
 
-    this.city = this.generateSelector(SCREEN_SELECTOR.city[this.platform]);
-    this.cityLabel = this.generateSelector(
-      SCREEN_SELECTOR.cityLabel[this.platform]
+    this.city = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.city[this.platform]
+    );
+    this.cityLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.cityLabel[this.platform],
+      "class_chain"
     );
 
-    this.country = this.generateSelector(
+    this.country = locatorHelper.generateSelector(
       SCREEN_SELECTOR.country[this.platform]
     );
-    this.countryLabel = this.generateSelector(
-      SCREEN_SELECTOR.countryLabel[this.platform]
+    this.countryLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.countryLabel[this.platform],
+      "class_chain"
     );
-    this.countryOptionLabel = this.generateSelector(
+    this.countryOptionLabel = locatorHelper.generateSelector(
       SCREEN_SELECTOR.countryOptionLabel[this.platform]
     );
 
-    this.postCode = this.generateSelector(
+    this.postCode = locatorHelper.generateSelector(
       SCREEN_SELECTOR.postCode[this.platform]
     );
-    this.postCodeLabel = this.generateSelector(
-      SCREEN_SELECTOR.postCodeLabel[this.platform]
+    this.postCodeLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.postCodeLabel[this.platform],
+      "class_chain"
     );
 
-    this.phone = this.generateSelector(SCREEN_SELECTOR.phone[this.platform]);
-    this.phoneLabel = this.generateSelector(
-      SCREEN_SELECTOR.phoneLabel[this.platform]
+    this.phone = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.phone[this.platform]
+    );
+    this.phoneLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.phoneLabel[this.platform],
+      "class_chain"
     );
 
-    this.dob = this.generateSelector(SCREEN_SELECTOR.dob[this.platform]);
-    this.nextBtn = this.generateSelector(
+    this.dob = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.dob[this.platform], 'accessibility_id'
+    );
+    this.nextBtn = locatorHelper.generateSelector(
       SCREEN_SELECTOR.nextBtn[this.platform]
     );
   }
@@ -162,43 +173,44 @@ export default class PersonalTab extends CheckoutFlow {
   }
 
   public async setFullName(value: string) {
-    await $(this.fullName).setValue(value);
+    // await $(this.fullName).setValue(value);
+    await this.setValueToInputField(this.fullName, value);
   }
 
   public async getFullName() {
-    return $(this.fullName).getAttribute("text");
+    return this.getContentOfInputField(this.fullName);
   }
 
   public async setAddress(value: string) {
-    await $(this.address).setValue(value);
+    await this.setValueToInputField(this.address, value);
   }
 
   public async getAddress() {
-    return $(this.address).getAttribute("text");
+    return this.getContentOfInputField(this.address);
   }
 
   public async setCity(value: string) {
-    await $(this.city).setValue(value);
+    await this.setValueToInputField(this.city, value);
   }
 
   public async getCity() {
-    return $(this.city).getAttribute("text");
+    return this.getContentOfInputField(this.city);
   }
 
   public async setPostCode(value: string) {
-    await $(this.postCode).setValue(value);
+    await this.setValueToInputField(this.postCode, value);
   }
 
   public async getPostCode() {
-    return $(this.postCode).getAttribute("text");
+    return this.getContentOfInputField(this.postCode);
   }
 
   public async setPhone(value: string) {
-    await $(this.phone).setValue(value);
+    await this.setValueToInputField(this.phone, value);
   }
 
   public async getPhone() {
-    return $(this.phone).getAttribute("text");
+    return this.getContentOfInputField(this.phone);
   }
 
   private async openCountryFieldInAndroid() {
@@ -206,7 +218,16 @@ export default class PersonalTab extends CheckoutFlow {
   }
 
   private async openCountryFieldInIOS() {
-    await $(this.country).click();
+    const bounds = await elementHelper.getBoundOfElement(this.country);
+    await driver
+      .action("pointer", {
+        parameters: { pointerType: "touch" },
+      })
+      .move({
+        x: bounds.right - 5,
+        y: bounds.bottom - 5,
+      })
+      .perform();
   }
 
   private async openDobFieldInAndroid() {
@@ -219,6 +240,13 @@ export default class PersonalTab extends CheckoutFlow {
     await AndroidDatePicker.monthPicker(month);
     await AndroidDatePicker.dayPicker(day);
     await AndroidDatePicker.submitDate();
+  }
+
+  private async selectDobInIOS(day: number, month: number, year: number) {
+    await IOSDatePicker.dayPicker(day);
+    await IOSDatePicker.monthPicker(month);
+    await IOSDatePicker.yearPicker(year);
+    await IOSDatePicker.submitDate();
   }
 
   private async openDobFieldInIOS() {
@@ -235,7 +263,12 @@ export default class PersonalTab extends CheckoutFlow {
   }
 
   private async setCountryInIos(value: string) {
-    await this.openCountryFieldInIOS()
+    let currentText = await this.getCountry();
+    if (currentText.includes("Select a country")) {
+      currentText = "A";
+    }
+    await this.openCountryFieldInIOS();
+    await IOSDropdown.scrollToSelect(currentText, value);
   }
 
   public async setCountry(value: string) {
@@ -247,8 +280,7 @@ export default class PersonalTab extends CheckoutFlow {
   }
 
   public async getCountry() {
-    const country = await $(this.country).getAttribute("text");
-    return country;
+    return this.getContentOfInputField(this.country);
   }
 
   /**
@@ -262,13 +294,14 @@ export default class PersonalTab extends CheckoutFlow {
       await this.openDobFieldInAndroid();
       await this.selectDobInAndroid(day, month, year);
     } else {
-      await this.openCountryFieldInIOS();
+      await this.openDobFieldInIOS();
+      await this.selectDobInIOS(day, month, year);
+
     }
   }
 
   public async getDob() {
-    const dob = await $(this.dob).getAttribute("text");
-    return dob;
+    return this.getContentOfInputField(this.dob);
   }
 
   public async submit() {
