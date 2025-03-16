@@ -62,12 +62,20 @@ export default class IOSDropdown {
     const scrollableEl = $(IOSDropdown.dialog);
 
     const percentToScroll = async () => {
-      let currentSelectedVal = await $(
-        locatorHelper.generateSelector(
-          "XCUIElementTypePickerWheel",
-          "class_name"
-        )
-      ).getAttribute("value");
+      let currentSelectedVal =
+        (await $(
+          locatorHelper.generateSelector(
+            "XCUIElementTypePickerWheel",
+            "class_name"
+          )
+        ).getAttribute("value")) === "Select a country"
+          ? "AZZ"
+          : await $(
+              locatorHelper.generateSelector(
+                "XCUIElementTypePickerWheel",
+                "class_name"
+              )
+            ).getAttribute("value");
       let totalCharCodeOfCurrentSelectedVal = Array.from(
         currentSelectedVal.slice(0, 3)
       ).reduce((prev, curr) => prev + curr.charCodeAt(0), 0);
@@ -78,7 +86,7 @@ export default class IOSDropdown {
       let percentToScroll =
         Math.abs(
           totalCharCodeOfCurrentSelectedVal - totalCharCodeOfTargetText
-        ) >= 4
+        ) >= 30
           ? { percent: 0.7, duration: 500 }
           : {
               percent: MOBILE_UI_CONSTANTS.ios.SMALL_SWIPE_DATE_PICKER,

@@ -50,6 +50,11 @@ export default class AndroidDatePicker {
 
   static async yearPicker(year: number) {
     //open year modal
+    if (
+      (await $(AndroidDatePicker.headerYear).getAttribute("text")) ===
+      year.toString()
+    )
+      return;
     await $(AndroidDatePicker.headerYear).click();
     //set swipe direction
     const currentYear = new Date().getFullYear();
@@ -63,7 +68,7 @@ export default class AndroidDatePicker {
     // swipe until see year in modal and click
     await swipeAction.swipeUntilSeeElement(selectYearSelector, {
       direction: direction!,
-      duration: 500
+      duration: 500,
     });
 
     await $(selectYearSelector).click();

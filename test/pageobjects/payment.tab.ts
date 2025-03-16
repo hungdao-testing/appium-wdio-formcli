@@ -1,5 +1,6 @@
 import { locatorHelper } from "../helpers/locator";
 import CheckoutFlow from "./checkout-flow.page";
+import { $, driver } from "@wdio/globals";
 
 const SCREEN_SELECTOR = {
   cardNumber: {
@@ -42,28 +43,15 @@ const SCREEN_SELECTOR = {
 };
 
 const errorFieldLabels = {
-  cardNumber: {
-    android: "",
-    ios: "cardNumber-content",
+  android: {
+    cardNumber: 'new UiSelector().resourceId("cardNumber-errorMsg")',
+    expiredDate: 'new UiSelector().resourceId("expireDate-errorMsg")',
+    cvv: 'new UiSelector().resourceId("cvv-errorMsg")',
   },
-
-  expiredDate: {
-    android: "",
-    ios: "expireDate-content",
-  },
-
-  cvv: {
-    android: "",
-    ios: "cvv-content",
-  },
-
-  creditCard: {
-    android: "",
-    ios: "saveCard-checkbox",
-  },
-  creditCardLabel: {
-    android: "",
-    ios: '**/XCUIElementTypeStaticText[`name == "Save Credit Card"`][2]',
+  ios: {
+    cardNumber: "cardNumber-errorMsg",
+    expiredDate: "expireDate-errorMsg",
+    cvv: "cvv-errorMsg",
   },
 };
 
@@ -74,6 +62,9 @@ export default class PaymentTab extends CheckoutFlow {
   private expiredDateLabel: string;
   private creditCard: string;
   private creditCardLabel: string;
+  private cvv: string;
+  private cvvLabel: string;
+  private nextBtn: string;
 
   constructor() {
     super();
@@ -101,6 +92,18 @@ export default class PaymentTab extends CheckoutFlow {
       SCREEN_SELECTOR.creditCardLabel[this.platform],
       "class_chain"
     );
+
+    this.cvv = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.cvv[this.platform],
+      "accessibility_id"
+    );
+    this.cvvLabel = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.cvvLabel[this.platform],
+      "class_chain"
+    );
+    this.nextBtn = locatorHelper.generateSelector(
+      SCREEN_SELECTOR.nextBtn[this.platform]
+    );
   }
 
   public async isAt() {
@@ -109,54 +112,76 @@ export default class PaymentTab extends CheckoutFlow {
       $(this.cardNumberLabel).waitForDisplayed(),
       $(this.expiredDateLabel).waitForDisplayed(),
       $(this.creditCardLabel).waitForDisplayed(),
+      $(this.cvvLabel).waitForDisplayed(),
     ]);
     return true;
   }
 
-  public async getCardNumber(){
+  public async getCardNumber() {
     return this.getContentOfInputField(this.cardNumber);
   }
-  public async setCardNumber(value: string){
+  public async setCardNumber(value: string) {
     await this.setValueToInputField(this.cardNumber, value);
   }
-  public async getCExpiredDate(){
+  public async getExpiredDate() {
     return this.getContentOfInputField(this.expiredDate);
   }
-  public async setExpiredDate(value: string){
+  public async setExpiredDate(value: string) {
     await this.setValueToInputField(this.expiredDate, value);
   }
-  private async getCreditCardBoxInIOS(){
-    const value = await this.getContentOfInputField(this.cardNumber);
-    if(value === 'checkbox, unchecked, off'){
-        return false;
+  private async getCreditCardBoxInIOS() {
+    const value = await this.getContentOfInputField(this.creditCard);
+    if (value === "checkbox, unchecked, off") {
+      return false;
     }
     return true;
   }
 
-  private async getCreditCardBoxInAndroid(){
-    return true;
+  private async getCreditCardBoxInAndroid() {
+    const contentDesc = await $(this.creditCard).getAttribute("content-desc");
+    return contentDesc === "off" ? false : true;
   }
 
-  public async getCreditCardBox(){
-    if(this.platform === 'ios'){
-        return this.getCreditCardBoxInIOS();
-    }else{
-        return this.getCreditCardBoxInAndroid();
+  public async getCreditCardBox() {
+    if (this.platform === "ios") {
+      return this.getCreditCardBoxInIOS();
+    } else {
+      return this.getCreditCardBoxInAndroid();
     }
   }
   /**
    * @description Check and uncheck the `Save Credit Card` check-box based on the `isCheck` value
-   * 
+   *
    * If `isCheck == true` => make sure the check-box is ticked
-   * 
+   *
    * If `isCheck == false` => make sure the check-box is unticked
-   * @param {boolean} isChecked 
+   * @param {boolean} isChecked
    */
-  public async setCreditCardBox(isChecked: boolean){
-    if(isChecked && !await this.getCreditCardBox()){
-        await $(this.creditCard).click();
-    }else if(!isChecked && await this.getCreditCardBox()){
-        await $(this.creditCard).click();
+  public async setCreditCardBox(isChecked: boolean) {
+    if (isChecked && !(await this.getCreditCardBox())) {
+      await $(this.creditCard).click();
+    } else if (!isChecked && (await this.getCreditCardBox())) {
+      await $(this.creditCard).click();
     }
+  }
+
+  public async getCvv() {
+    return this.getContentOfInputField(this.cvv);
+  }
+
+  public async setCvv(cvv: string) {
+    await this.setValueToInputField(this.cvv, cvv);
+  }
+
+  public async submit() {
+    await $(this.nextBtn).click();
+  }
+
+  public async getErrorMessageOnField(
+    fieldName: keyof (typeof errorFieldLabels)["android" | "ios"]
+  ) {
+    return this.getContentOfInputField(
+      errorFieldLabels[this.platform][fieldName]
+    );
   }
 }
