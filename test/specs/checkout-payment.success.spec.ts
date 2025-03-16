@@ -31,7 +31,7 @@ describe("Checkout - Personal info @personal-info", () => {
     await personalTab.setFullName(personalInfo.fullName);
     await personalTab.setAddress(personalInfo.address);
     await personalTab.setCity(personalInfo.city);
-    await personalTab.setPostCode(personalInfo.city);
+    await personalTab.setPostCode(personalInfo.postCode);
     await personalTab.setPhone(personalInfo.phone);
     await personalTab.setCountry(personalInfo.country);
     await personalTab.setDob(
