@@ -41,7 +41,7 @@ const SCREEN_SELECTOR = {
     ios: '**/XCUIElementTypeStaticText[`name == "Post code"`][2]',
   },
   country: {
-    android: 'new UiSelector().resourceId("text_input")',
+    android: 'new UiSelector().resourceId("testID-testInputProps")',
     ios: "ios_touchable_wrapper",
   },
   countryLabel: {
@@ -225,7 +225,7 @@ export default class PersonalTab extends CheckoutFlow {
   }
 
   public async setFullName(value: string) {
-    // await $(this.fullName).setValue(value);
+  
     await this.setValueToInputField(this.fullName, value);
   }
 

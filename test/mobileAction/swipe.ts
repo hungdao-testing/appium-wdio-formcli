@@ -15,7 +15,6 @@ async function swipeUntilCondition(
 }
 
 async function swipeUntilSeeElement(element: string, swipeOpt: SwipeOptions) {
-  if (!swipeOpt.direction) return;
   await swipeUntilCondition($(element).isDisplayed, swipeOpt);
 }
 
