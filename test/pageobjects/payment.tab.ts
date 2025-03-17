@@ -181,7 +181,10 @@ export default class PaymentTab extends CheckoutFlow {
     fieldName: keyof (typeof errorFieldLabels)["android" | "ios"]
   ) {
     return this.getContentOfInputField(
-      errorFieldLabels[this.platform][fieldName]
+      locatorHelper.generateSelector(
+        errorFieldLabels[this.platform][fieldName],
+        "accessibility_id"
+      )
     );
   }
 }

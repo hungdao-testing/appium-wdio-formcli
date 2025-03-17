@@ -1,6 +1,5 @@
 import { locatorHelper } from "../helpers/locator";
 import { $, driver } from "@wdio/globals";
-import { swipeAction } from "../mobileAction/swipe";
 import { MOBILE_UI_CONSTANTS } from "../constants/mobileUI";
 
 async function comparingValueToScroll(
