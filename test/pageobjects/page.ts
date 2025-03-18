@@ -10,13 +10,20 @@ export default class Page {
   }
 
   protected async getContentOfInputField(selector: string) {
-    if(this.platform === 'android'){
+    if (this.platform === "android") {
       return $(selector).getAttribute("text");
-    }else{
+    } else {
       const value = await $(selector).getAttribute("value");
       const label = await $(selector).getAttribute("label");
       return value || label;
     }
-   
+  }
+
+  protected expectedForDob(date: { day: number; month: number; year: number }) {
+    if (this.platform === "ios") {
+      return `${date.day}/${date.month}/${date.year}`;
+    } else {
+      return `${date.month}/${date.day}/${date.year}`;
+    }
   }
 }

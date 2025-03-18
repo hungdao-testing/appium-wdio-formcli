@@ -8,7 +8,7 @@ const ANDROID_CAP = {
   "appium:noReset": false,
   "appium:app": "./resources/formscli_android.apk",
   "appium:maxTypingFrequency": 30, // delay sending key stroke
-  "appium:isHeadless": true,
+  // "appium:isHeadless": true,
 };
 
 const IOS_CAP = {
@@ -21,7 +21,7 @@ const IOS_CAP = {
   "appium:noReset": false,
   "appium:app": "./resources/formscli_ios.zip",
   "appium:maxTypingFrequency": 30, // delay sending key stroke
-  "appium:isHeadless": true,
+  // "appium:isHeadless": true,
 
 };
 
