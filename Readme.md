@@ -1,7 +1,12 @@
 ## Automation React-native app by Appium/Wdio
 
 ### Source app
-- The android and ios app are built from the repo `https://github.com/hungdao-testing/rn-forms/releases/tag/v1.0.0`
+- The android and ios apps (`.apk`, `.zip`) are built from the repo `https://github.com/hungdao-testing/rn-forms/releases/tag/v1.0.0`
+
+Or in the link
+```
+https://github.com/hungdao-testing/appium-wdio-formcli/releases/tag/v1.0.0
+```
 
 ### Technology:
 - Testing framework: Appium + Wdio
