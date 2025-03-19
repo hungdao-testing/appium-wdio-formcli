@@ -9,7 +9,7 @@ https://github.com/hungdao-testing/appium-wdio-formcli/releases/tag/v1.0.0
 ```
 
 ### Technology:
-- Testing framework: Appium + Wdio
+- Testing framework: Appium (`2.16.2` installed globally) + Wdio
 - Test script desgin technique: Page Object Model
 
 ### App walk-through
