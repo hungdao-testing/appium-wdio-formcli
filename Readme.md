@@ -12,6 +12,8 @@ https://github.com/hungdao-testing/appium-wdio-formcli/releases/tag/v1.0.0
 - Testing framework: Appium (`2.16.2` installed globally) + Wdio
 - Test script desgin technique: Page Object Model
 
+WebdriverIo setup: https://webdriver.io/docs/appium
+
 ### App walk-through
 
 The mobile app simulates the check-out process by inputing 2 forms
