@@ -30,3 +30,40 @@ In this screen, there are few notes MUST be taken into account:
 
 #### 3. Summary information:
 - User could edit for each card (personal or payment), and then the corresponding flow is triggered again.
+
+#### Error message and more format for fields:
+
+Please refer to the https://github.com/hungdao-testing/rn-forms/blob/v1.0.0/src/contexts/CheckoutFormProvider.tsx
+
+Here is the source code
+```ts
+export const PersonalInfoSchema = z.object({
+  fullName: z
+    .string({
+      message: 'Full name must be required',
+    })
+    .min(1, {message: 'Full name must be longer than 1'}),
+  address: z.string().min(1, {message: 'Please provide address'}),
+  city: z.string().min(1, {message: 'City is required'}),
+  postCode: z.string().min(1, {message: 'PostalCode is required'}),
+  country: z.string().length(2),
+  phoneNumber: z.string().min(1, {message: 'Please provide phone number'}),
+  dateOfBirth: z.string(),
+});
+
+export type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
+
+export const PaymentInfoSchema = z.object({
+  cardNumber: z
+    .string({message: 'Please provide card number'})
+    .min(1, {message: 'Card number must be longer than 1'}),
+  expireDate: z
+    .string()
+    .regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, 'Please use MM/YY format'),
+  cvv: z.coerce
+    .number({message: 'Please provide cvv number'})
+    .min(100, {message: 'input should be greater than 100'})
+    .max(999, {message: 'input should be less than 999'}),
+  saveCard: z.boolean().optional(),
+});
+```
