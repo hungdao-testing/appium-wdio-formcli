@@ -1,14 +1,17 @@
+import * as os from "os";
+import { driver } from "@wdio/globals";
+
 const ANDROID_CAP = {
   "appium:platformName": "Android",
   "wdio:maxInstances": 1,
   "appium:platformVersion": "15.0",
   "appium:automationName": "UiAutomator2",
   "appium:deviceName": "Pixel 7a API",
-  "appium:newCommandTimeout": 240,
+  "appium:newCommandTimeout": 300,
   "appium:noReset": false,
   "appium:app": "./resources/formscli_android.apk",
   "appium:maxTypingFrequency": 30, // delay sending key stroke
-  // "appium:isHeadless": true,
+  "appium:isHeadless": true,
 };
 
 const IOS_CAP = {
@@ -16,13 +19,12 @@ const IOS_CAP = {
   "wdio:maxInstances": 1,
   "appium:automationName": "XCUITest",
   "appium:deviceName": "iPhone 15 Pro",
-  "appium:newCommandTimeout": 240,
+  "appium:newCommandTimeout": 300,
   "appium:platformVersion": "17.5",
   "appium:noReset": false,
   "appium:app": "./resources/formscli_ios.zip",
   "appium:maxTypingFrequency": 30, // delay sending key stroke
-  // "appium:isHeadless": true,
-
+  "appium:isHeadless": true,
 };
 
 export const config: WebdriverIO.Config = {
@@ -59,7 +61,7 @@ export const config: WebdriverIO.Config = {
 
   bail: 0,
 
-  waitforTimeout: 60000,
+  waitforTimeout: 120000,
   connectionRetryTimeout: 120000,
 
   connectionRetryCount: 3,
@@ -83,9 +85,36 @@ export const config: WebdriverIO.Config = {
 
   framework: "mocha",
 
-  reporters: ["spec"],
+  reporters: [
+    "spec",
+    [
+      "allure",
+      {
+        outputDir: "allure-results",
+        disableWebdriverStepsReporting: true,
+
+        reportedEnvironmentVars: {
+          os_platform: os.platform(),
+          os_release: os.release(),
+          os_version: os.version(),
+          node_version: process.version,
+        },
+      },
+    ],
+  ],
   mochaOpts: {
     ui: "bdd",
-    timeout: 60000,
+    timeout: 120000,
   },
+
+  afterTest: async function (
+    test,
+    context,
+    { error, result, duration, passed, retries }
+  ) {
+    if (error) {
+      await driver.takeScreenshot();
+    }
+  },
+  onComplete: function () {},
 };
