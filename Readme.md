@@ -11,6 +11,7 @@ https://github.com/hungdao-testing/appium-wdio-formcli/releases/tag/v1.0.0
 ### Technology:
 - Testing framework: Appium (`2.16.2` installed globally) + Wdio
 - Test script desgin technique: Page Object Model
+- Reporter: Allure Reporter
 
 WebdriverIo setup: https://webdriver.io/docs/appium
 
