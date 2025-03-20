@@ -1,0 +1,7 @@
+"BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
+"0","","0","Home screen @home-screen @smoke","4","0","","0"
+"0","","0","Checkout - Personal info @personal-info","2","0","Handle error messages","0"
+"0","","0","Checkout - Payment info @payment-info","2","0","Handle error messages","0"
+"0","","0","Checkout - Personal info @personal-info","2","0","input required fields personal-info","0"
+"0","","0","Checkout - Payment info @payment-info","2","0","input required fields payment-info","0"
+"0","","0","Checkout - Summary @summary","2","0","","0"

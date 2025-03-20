@@ -3,8 +3,10 @@ import HomePage from "../pageobjects/home.page";
 import PersonalTab from "../pageobjects/personal.tab";
 import * as COUNTRIES from "../data/countries.json";
 import PaymentTab from "../pageobjects/payment.tab";
+import allureReporter from '@wdio/allure-reporter'
 
-describe("Checkout - Personal info @personal-info", () => {
+
+describe("Checkout - Payment info @payment-info", () => {
   const home = new HomePage();
   const personalTab = new PersonalTab();
   const paymentTab = new PaymentTab();
@@ -23,7 +25,8 @@ describe("Checkout - Personal info @personal-info", () => {
     },
     country: COUNTRIES[0].name,
   };
-  it("User could input personal info @smoke", async () => {
+  it("User could input payment info @smoke", async () => {
+    allureReporter.addStory('input required fields payment-info')
     //arrange
     expect(await home.isAt()).toBeTruthy();
     await home.openCheckOut();

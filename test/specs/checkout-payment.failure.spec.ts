@@ -3,8 +3,9 @@ import HomePage from "../pageobjects/home.page";
 import PersonalTab from "../pageobjects/personal.tab";
 import * as COUNTRIES from "../data/countries.json";
 import PaymentTab from "../pageobjects/payment.tab";
+import allureReporter from "@wdio/allure-reporter";
 
-describe("Checkout - Personal info @personal-info", () => {
+describe("Checkout - Payment info @payment-info", () => {
   const home = new HomePage();
   const personalTab = new PersonalTab();
   const paymentTab = new PaymentTab();
@@ -42,6 +43,8 @@ describe("Checkout - Personal info @personal-info", () => {
     await personalTab.submit();
   });
   it("Verify error messages for fields @regression", async () => {
+    allureReporter.addStory("Handle error messages");
+
     //arrange
 
     const paymentInfo = {

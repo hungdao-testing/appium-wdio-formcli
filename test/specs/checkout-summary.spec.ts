@@ -6,7 +6,7 @@ import SummaryTab from "../pageobjects/summary.tab";
 import PersonalTab from "../pageobjects/personal.tab";
 import PaymentTab from "../pageobjects/payment.tab";
 
-describe("Checkout - Summary @personal-summary", () => {
+describe("Checkout - Summary @summary", () => {
   const now = new Date(Date.now());
   const personalInfo: PersonalInfo = {
     fullName: "David James",
@@ -30,7 +30,7 @@ describe("Checkout - Summary @personal-summary", () => {
 
   let summaryTab = new SummaryTab(personalInfo, paymentInfo);
 
-  it("User could edit personal and payment info", async () => {
+  it("User could edit personal and payment info @smoke", async () => {
     //arrange
     const personalTab = new PersonalTab();
     const paymentTab = new PaymentTab();

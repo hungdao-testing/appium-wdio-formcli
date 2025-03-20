@@ -1,8 +1,12 @@
-import { expect } from "@wdio/globals";
+import { expect} from "@wdio/globals";
 import HomePage from "../pageobjects/home.page";
 import PersonalTab from "../pageobjects/personal.tab";
+import allureReporter from '@wdio/allure-reporter'
 
 describe("Checkout - Personal info @personal-info", () => {
+  allureReporter.addFeature('Checkout')
+  allureReporter.addSuite('personal-info')
+
   const home = new HomePage();
   const personalTab = new PersonalTab();
   const now = new Date(Date.now());
@@ -24,6 +28,7 @@ describe("Checkout - Personal info @personal-info", () => {
   }
 
   it("User could input personal info @smoke", async () => {
+    allureReporter.addStory('input required fields personal-info')
     const countryData = {
       name: "American Samoa",
       code: "AS",
