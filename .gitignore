@@ -1,6 +1,7 @@
 logs/
 node_modules/
 allure-results/
+allure-report/
 resources/formscli_android.apk
 resources/formscli_ios.zip
 .DS_Store
